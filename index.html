@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrimPage — Crop PDF Pages Online Free: Trim Margins & White Space</title>
+<meta name="description" content="Free PDF crop tool. Trim margins by percentage, auto-detect white borders from the rendered page, preview before and after, and apply to all or selected pages.">
+<link rel="canonical" href="https://trimpage.fixoraa.tech/">
+<meta property="og:title" content="TrimPage — Crop PDF Pages Online Free: Trim Margins & White Space">
+<meta property="og:description" content="Free PDF crop tool. Trim margins by percentage, auto-detect white borders from the rendered page, preview before and after, and apply to all or selected pages.">
+<meta property="og:url" content="https://trimpage.fixoraa.tech/">
+<meta property="og:type" content="website">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';</script>
+<style>
+:root{--pri:#0F766E;--acc:#E11D48;--bgc:#F0FDF9}
+body{background:var(--bgc);font-family:'Segoe UI',system-ui,sans-serif}
+.pri{background:var(--pri)} .prit{color:var(--pri)}
+.btn{background:var(--pri);color:#fff;padding:.6rem 1.2rem;border-radius:.6rem;font-weight:600;cursor:pointer;border:none}
+.btn:hover{opacity:.9} .btn2{background:var(--acc);color:#111;padding:.6rem 1.2rem;border-radius:.6rem;font-weight:600;cursor:pointer;border:none}
+.btn:disabled,.btn2:disabled{opacity:.45;cursor:not-allowed}
+input,select,textarea{border:1.5px solid #cbd5e1;border-radius:.55rem;padding:.55rem .7rem;width:100%;background:#fff;color:#0f172a}
+input[type=file]{padding:.45rem .6rem} input[type=range]{padding:0} input[type=checkbox],input[type=radio]{width:auto}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--pri);border-color:transparent}
+label{font-size:.83rem;font-weight:600;display:block;margin-bottom:.3rem}
+.card{background:#fff;border-radius:1rem;box-shadow:0 8px 30px rgba(15,23,42,.08);padding:1.4rem}
+article p{margin:.7rem 0;line-height:1.75;color:#334155}
+article h2{font-size:1.45rem;font-weight:800;margin:1.6rem 0 .4rem;color:#0f172a}
+.faq{background:#fff;border-radius:.7rem;padding:.9rem 1.1rem;margin:.55rem 0;box-shadow:0 2px 10px rgba(15,23,42,.05)}
+.faq summary{font-weight:700;cursor:pointer}
+table.dt{width:100%;border-collapse:collapse} table.dt th,table.dt td{border:1px solid #e2e8f0;padding:.45rem .6rem;text-align:left;font-size:.9rem}
+table.dt th{background:#f1f5f9}
+.drop{border:2px dashed #94a3b8;border-radius:.8rem;padding:1.1rem;text-align:center;background:#f8fafc}
+canvas.prev{max-width:100%;border:1px solid #e2e8f0;border-radius:.5rem;background:#fff}
+
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "TrimPage", "url": "https://trimpage.fixoraa.tech/", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "description": "Free PDF crop tool. Trim margins by percentage, auto-detect white borders from the rendered page, preview before and after, and apply to all or selected pages."}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does cropping delete the trimmed content?", "acceptedAnswer": {"@type": "Answer", "text": "It hides it by setting the page's crop box \u2014 viewers and printers show only the cropped area. That makes cropping reversible in principle, and means it must never be used as redaction for sensitive content."}}, {"@type": "Question", "name": "How does auto-detect find the margins?", "acceptedAnswer": {"@type": "Answer", "text": "It renders page one and scans for the first non-white pixels from each edge, then proposes trims that hug the content with a small safety pad. You can adjust every number before applying."}}, {"@type": "Question", "name": "Can I test on one page before cropping all?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 choose 'First page only', run the crop, and inspect the before/after preview. When it looks right, apply the same numbers to all pages."}}, {"@type": "Question", "name": "Will cropping reduce file size?", "acceptedAnswer": {"@type": "Answer", "text": "Not meaningfully \u2014 the hidden content still exists in the file beneath the crop box. For smaller files, use a compressor such as PDFSlim after cropping."}}, {"@type": "Question", "name": "What trim values are safe?", "acceptedAnswer": {"@type": "Answer", "text": "Leave a small breathing pad \u2014 auto-detect already adds one. As a rule, avoid total trims above about 90% in either dimension combined; the tool blocks settings that would leave almost no page."}}, {"@type": "Question", "name": "Is my PDF uploaded to a server?", "acceptedAnswer": {"@type": "Answer", "text": "No. Rendering, detection and cropping all run in your browser; your document never leaves your device."}}]}</script>
+</head>
+<body id="top">
+<header class="sticky top-0 z-40 shadow-md" style="background:#042F2E">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 py-3 flex items-center justify-between">
+    <a href="#top" class="text-xl font-extrabold tracking-tight" style="color:#F0FDF9">✂ TrimPage</a>
+    <nav class="flex gap-5 text-sm font-semibold" style="color:#F0FDF9">
+      <a href="#top" class="hover:underline">Home</a>
+      <a href="https://fixoraa.tech" class="hover:underline">More Tools</a>
+    </nav>
+  </div>
+</header>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pt-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <div class="origin-top scale-[0.44] sm:scale-100 shrink-0">
+        <script>
+          atOptions = { 'key' : '4e68ac77881c17fe128a46565d9a4e8c', 'format' : 'iframe', 'height' : 90, 'width' : 728, 'params' : {} };
+        </script>
+        <script src="https://www.highrevenueformat.com/4e68ac77881c17fe128a46565d9a4e8c/invoke.js"></script>
+      </div>
+    </div>
+  </div>
+</div>
+<main class="mx-auto max-w-6xl px-4 sm:px-6 py-8">
+  <div class="text-center mb-6">
+    <h1 class="text-3xl sm:text-4xl font-extrabold" style="color:#0f172a">Crop PDF Pages — Trim Margins & White Space</h1>
+    <p class="mt-2 text-slate-600 max-w-2xl mx-auto">Wide white margins waste screen, paper and attention. TrimPage crops them away — by exact percentages, or automatically by detecting where the content actually begins — with a before/after preview so you crop with confidence.</p>
+    <span class="inline-block mt-3 px-3 py-1 rounded-full text-xs font-bold text-white pri">✓ Unlimited Free Usage — No Signup, No Watermark</span>
+    <p class="mt-2 text-xs text-slate-500">🔒 100% private: your file is processed entirely in your browser and never uploaded to any server.</p>
+  </div>
+  <div class="grid md:grid-cols-5 gap-6">
+  <div class="card md:col-span-2 space-y-3">
+    <div class="drop"><label>Your PDF</label><input id="file" type="file" accept="application/pdf"></div>
+    <div class="grid grid-cols-2 gap-3"><div><label>Trim left %</label><input id="tl" type="number" value="5" step="0.5"></div><div><label>Trim right %</label><input id="tr" type="number" value="5" step="0.5"></div><div><label>Trim top %</label><input id="tt" type="number" value="5" step="0.5"></div><div><label>Trim bottom %</label><input id="tb" type="number" value="5" step="0.5"></div></div>
+    <div><label>Apply to</label><select id="apply"><option value="all">All pages</option><option value="first">First page only (test)</option></select></div>
+    <button class="btn w-full" onclick="autoDetect()">🔍 Auto-detect white margins (page 1)</button>
+    <button class="btn w-full" id="go" onclick="run()">Crop PDF</button>
+    <button class="btn2 w-full" id="dl" style="display:none">⬇ Download cropped PDF</button>
+    <p id="status" class="text-sm font-semibold"></p>
+  </div>
+  <div class="card md:col-span-3">
+    <h3 class="font-bold mb-2">Before / after — page 1</h3>
+    <div class="grid grid-cols-2 gap-3"><canvas id="before" class="prev" width="300" height="390"></canvas><canvas id="after" class="prev" width="300" height="390"></canvas></div>
+    <p class="text-xs text-slate-500 mt-2">Cropping sets each page's crop box — content outside it is hidden and the page displays and prints at its new, tighter size.</p>
+  </div></div>
+</main>
+<div class="no-print mx-auto max-w-6xl px-4 sm:px-6 pb-4" role="complementary" aria-label="Advertisement">
+  <div class="mx-auto text-center" style="max-width:728px">
+    <span class="block text-[10px] tracking-[0.18em] uppercase text-slate-400 mb-1.5">Advertisement</span>
+    <div class="flex justify-center overflow-hidden">
+      <script async src="https://js.wpadmngr.com/static/adManager.js" data-admpid="464498"></script>
+    </div>
+  </div>
+</div>
+<section class="mx-auto max-w-4xl px-4 sm:px-6 pb-6">
+  <article>
+  <h2>Margins are a design decision somebody else made</h2>
+<p>Every PDF inherits the page geometry of whoever produced it: the scanner's generous borders, the journal's print margins, the slide deck's letterboxing. On a phone or an e-reader those margins are theft — a quarter of your small screen showing nothing, the actual content shrunk to fill what remains. Cropping reclaims the page. It redefines where the page ends so viewers display, and printers print, the document at the size its content deserves.</p>
+<p>TrimPage crops by setting each page's crop box, the PDF mechanism designed for exactly this. Content outside the box is not deleted — it is hidden, and the page presents at its new dimensions in every viewer and print dialog. That makes cropping both powerful and forgiving: the numbers you choose define a window, and the preview shows you precisely the window you will get before you commit to a download.</p>
+<h2>Percentage trims versus auto-detection</h2>
+<p>Manual percentage trims are for uniform documents: a scanned book whose every page carries the same border, a slide export with consistent letterboxing. Set the four edges once, apply to all pages, done. Percentages scale gracefully across mixed page sizes, since each page is trimmed in proportion to its own dimensions — five percent off a large page removes more points than five percent off a small one, which is usually what visual consistency demands.</p>
+<p>Auto-detection is for the unknown document. TrimPage renders the first page, scans its pixels for the first non-white content in each direction, and proposes trims that hug the content with a small safety pad. On scans of printed pages it is uncannily good, because scanner white is truly white and text is truly not. On designed pages with pale backgrounds or watermarks it proposes conservatively — and the final say is always yours, in editable numbers, before anything is applied.</p>
+<h2>How to crop a PDF, step by step</h2>
+<p>Load the file and page one renders in the Before pane. Either type your four trims as percentages of width and height, or press Auto-detect and let the tool measure the white space for you. If the document is precious or its pages vary, choose 'First page only' and run a test crop: the After pane shows exactly what the new page looks like, rendered from the actual cropped output, not a simulation.</p>
+<p>When the test page looks right — content breathing room preserved, no descenders or page numbers clipped — switch to All pages and run the full crop. Download and spot-check a middle page and the last page in your usual viewer. Two cautions from practice: leave a small pad rather than cropping flush to the ink, because antialiasing and slight page-to-page drift are real; and remember that headers, footers and folios living in the margin will be cropped away with it — sometimes a feature, sometimes a loss.</p>
+<h2>Where cropping earns its keep</h2>
+<p>E-readers and phones are the headline case: a journal article cropped to its text block reads at a comfortable size instead of forcing pinch-zoom gymnastics on every paragraph. Print is the second: cropping a document's dead borders before printing handouts lets the content use the sheet, and combines beautifully with n-up imposition — crop first, then stack, and every cell carries more legible text.</p>
+<p>Slides and screenshots form the third case. Exported decks often carry letterbox bars; photographed documents carry desk edges and shadows in their margins; certificates carry ornamental borders that shrink the name to a whisper. A two-minute crop turns each into a document that fills its frame with intent. In every case the pattern is identical: the content was always fine — it was the frame that was wrong.</p>
+<h2>What cropping does not do</h2>
+<p>Honesty about mechanism helps you choose well. Crop boxes hide; they do not erase. The full original page still exists beneath the crop in the file, which means cropping is not a redaction method — never crop away sensitive content and consider it gone, because a recipient can reset the box and see it. For true removal you need a redaction tool that re-renders pages, such as Redactly. Likewise, cropping does not meaningfully shrink file size, since the hidden content still travels with the file.</p>
+<p>Nor can cropping add what is missing: a page scanned with its edge cut off stays cut off. And because viewers honour crop boxes when displaying and printing, while some pre-press tools read other page boxes, exotic print workflows may need the media box set too — TrimPage sets both, which covers the viewers and printers real people actually use.</p>
+<h2>Privacy: precise work on private papers</h2>
+<p>The documents people crop — contracts with wide signature margins, certificates, personal scans — are documents with names on them. TrimPage measures and crops inside your browser tab; nothing is uploaded, and the auto-detector's pixel scan happens on your own machine. Close the tab and the document is simply gone from the tool's world.</p>
+<p>Local processing also makes the test-crop loop free: iterate as often as your eye demands — a quarter percent here, a second look there — with no upload queue resetting your patience each round. Precision work rewards iteration, and iteration should never cost privacy.</p>
+<h2>Margins to keep, even when cropping hard</h2>
+<p>Resist the perfect hug. A whisper of white around content protects against the realities of the world: printers that drift a millimetre, viewers that round differently, pages within one scan batch that sit a degree off square. Two to three percent breathing room is invisible to readers and priceless in production. Keep folios deliberately: if page numbers live in the margin you are cropping, decide consciously whether the document still needs them — cropped handouts destined for a binder usually do, since loose sheets reorder themselves in every bag. And for bound reprints, remember the gutter: the inner margin of a facing page needs more room than the outer, so asymmetric trims — lighter on the binding side — serve the finished book better than symmetric zeal.</p>
+  <h2>Frequently Asked Questions</h2>
+  <details class="faq"><summary>Does cropping delete the trimmed content?</summary><p>It hides it by setting the page's crop box — viewers and printers show only the cropped area. That makes cropping reversible in principle, and means it must never be used as redaction for sensitive content.</p></details>
+<details class="faq"><summary>How does auto-detect find the margins?</summary><p>It renders page one and scans for the first non-white pixels from each edge, then proposes trims that hug the content with a small safety pad. You can adjust every number before applying.</p></details>
+<details class="faq"><summary>Can I test on one page before cropping all?</summary><p>Yes — choose 'First page only', run the crop, and inspect the before/after preview. When it looks right, apply the same numbers to all pages.</p></details>
+<details class="faq"><summary>Will cropping reduce file size?</summary><p>Not meaningfully — the hidden content still exists in the file beneath the crop box. For smaller files, use a compressor such as PDFSlim after cropping.</p></details>
+<details class="faq"><summary>What trim values are safe?</summary><p>Leave a small breathing pad — auto-detect already adds one. As a rule, avoid total trims above about 90% in either dimension combined; the tool blocks settings that would leave almost no page.</p></details>
+<details class="faq"><summary>Is my PDF uploaded to a server?</summary><p>No. Rendering, detection and cropping all run in your browser; your document never leaves your device.</p></details>
+  </article>
+</section>
+<footer class="mt-6 py-8" style="background:#042F2E;color:#F0FDF9">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6 text-center text-sm">
+    <p class="font-bold text-base">TrimPage</p>
+    <p class="opacity-80 mt-1">Free PDF crop tool. Trim margins by percentage, auto-detect white borders from the rendered page, preview before and after, and apply to all or selected pages.</p>
+    <p class="mt-2"><a href="#top" class="underline">Home</a> · <a href="https://fixoraa.tech" class="underline">More Tools</a></p>
+    <p class="fx-credit" style="text-align:center;font-size:12.5px;opacity:.62;margin:10px auto 2px;letter-spacing:.01em">Made by <a href="https://fixoraa.tech" target="_blank" rel="noopener" style="color:inherit;font-weight:700;text-decoration:underline;text-underline-offset:2px">Fixoraa</a></p>
+  </div>
+</footer>
+<script>
+
+const $=id=>document.getElementById(id);
+function fmtBytes(b){if(b===0)return '0 B';const k=1024,s=['B','KB','MB','GB'];const i=Math.floor(Math.log(b)/Math.log(k));return (b/Math.pow(k,i)).toFixed(i?1:0)+' '+s[i];}
+function setStatus(m,ok){const el=$('status');if(!el)return;el.textContent=m;el.style.color=ok===false?'#dc2626':'inherit';}
+function download(bytes,name,type){const blob=bytes instanceof Blob?bytes:new Blob([bytes],{type:type||'application/pdf'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},800);}
+async function readFile(input){const f=input.files&&input.files[0];if(!f)throw new Error('Please choose a PDF file first.');return {file:f,buf:await f.arrayBuffer()};}
+function showDl(id,bytes,name){const b=$(id);b.style.display='inline-block';b.onclick=()=>download(bytes,name);}
+
+
+let srcDoc=null, srcBuf=null;
+$('file').addEventListener('change',async()=>{ try{ const{buf}=await readFile($('file')); srcBuf=buf; srcDoc=await pdfjsLib.getDocument({data:buf.slice(0)}).promise; const p=await srcDoc.getPage(1); const vp=p.getViewport({scale:0.9}); const cv=$('before'); cv.width=vp.width; cv.height=vp.height; await p.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise; setStatus('Loaded: '+srcDoc.numPages+' pages.'); }catch(e){ setStatus('⚠ '+(e.message||e),false);} });
+async function autoDetect(){
+  if(!srcDoc){ setStatus('Load a PDF first.',false); return; }
+  const p=await srcDoc.getPage(1); const vp=p.getViewport({scale:1});
+  const cv=document.createElement('canvas'); cv.width=vp.width; cv.height=vp.height;
+  const ctx=cv.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,cv.width,cv.height);
+  await p.render({canvasContext:ctx,viewport:vp}).promise;
+  const d=ctx.getImageData(0,0,cv.width,cv.height).data;
+  let minX=cv.width,minY=cv.height,maxX=0,maxY=0;
+  for(let y=0;y<cv.height;y+=2){ for(let x=0;x<cv.width;x+=2){ const k=(y*cv.width+x)*4; if(d[k]<245||d[k+1]<245||d[k+2]<245){ if(x<minX)minX=x; if(x>maxX)maxX=x; if(y<minY)minY=y; if(y>maxY)maxY=y; } } }
+  if(maxX===0){ setStatus('Page 1 appears blank — nothing to detect.'); return; }
+  const pad=8;
+  $('tl').value=Math.max(0,((minX-pad)/cv.width*100)).toFixed(1); $('tr').value=Math.max(0,((cv.width-maxX-pad)/cv.width*100)).toFixed(1);
+  $('tt').value=Math.max(0,((minY-pad)/cv.height*100)).toFixed(1); $('tb').value=Math.max(0,((cv.height-maxY-pad)/cv.height*100)).toFixed(1);
+  setStatus('Detected content bounds with a small safety pad. Review, then press Crop PDF.');
+}
+async function run(){
+  const btn=$('go'); btn.disabled=true;
+  try{
+    if(!srcBuf) { const{buf}=await readFile($('file')); srcBuf=buf; }
+    const doc=await PDFLib.PDFDocument.load(srcBuf.slice(0));
+    const pages=doc.getPages();
+    const L=parseFloat($('tl').value)/100,R=parseFloat($('tr').value)/100,T=parseFloat($('tt').value)/100,B=parseFloat($('tb').value)/100;
+    if(L+R>=0.95||T+B>=0.95) throw new Error('Those trims would leave almost no page — reduce them.');
+    const targets=$('apply').value==='all'?pages:[pages[0]];
+    targets.forEach(pg=>{ const {width,height}=pg.getSize(); pg.setCropBox(width*L, height*B, width*(1-L-R), height*(1-T-B)); pg.setMediaBox(width*L, height*B, width*(1-L-R), height*(1-T-B)); });
+    const bytes=await doc.save();
+    showDl('dl',bytes,'cropped.pdf');
+    const nd=await pdfjsLib.getDocument({data:bytes.slice(0)}).promise; const p=await nd.getPage(1); const vp=p.getViewport({scale:0.9}); const cv=$('after'); cv.width=vp.width; cv.height=vp.height; await p.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise;
+    setStatus('Done ✔ Cropped '+targets.length+' page(s). Compare before/after above.');
+  }catch(e){ setStatus('⚠ '+(e.message||e),false); }
+  btn.disabled=false;
+}
+
+</script>
+</body>
+</html>
